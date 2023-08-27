@@ -7,17 +7,22 @@
 //7 drawing utilities from tensor flow
 //8 draw function
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import React, { useRef } from "react";
 import * as tf from "@tensorflow/tfjs";
 import * as posenet from "@tensorflow-models/posenet";
 import Webcam from "react-webcam";
 import { drawKeypoints, drawSkeleton } from "./utilities";
+import ImagePoseEstimation from "./ImagePoseEstimation";
 
 function App() {
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
+
+  // useEffect(() => {
+  //   runPosenet();
+  // }, []); //maybe delete it
 
   //Load posenet
   const runPosenet = async () => {
@@ -99,6 +104,14 @@ function App() {
           height: 480,
         }}
       />
+
+      <div>
+        {/* Render the ImagePoseEstimation component */}
+        <ImagePoseEstimation
+          imageSrc="/Neymarpose2.jpg"
+          canvasRef={canvasRef}
+        />
+      </div>
     </div>
   );
 }
