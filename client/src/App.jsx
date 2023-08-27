@@ -3,7 +3,7 @@
 //3 Set up web cam and canvas DONE
 //4 define referencies to those DONE
 //5 load pose net DOne
-//6 detect function
+//6 detect function Done
 //7 drawing utilities from tensor flow
 //8 draw function
 
@@ -13,6 +13,7 @@ import React, { useRef } from "react";
 import * as tf from "@tensorflow/tfjs";
 import * as posenet from "@tensorflow-models/posenet";
 import Webcam from "react-webcam";
+import { drawKeypoints, drawSkeleton } from "./utilities";
 
 function App() {
   const webcamRef = useRef(null);
@@ -28,27 +29,41 @@ function App() {
       detect(net);
     }, 100);
   };
+
   const detect = async (net) => {
-    if (
-      typeof webcamRef.current !== "undefined" &&
-      webcamRef.current !== null &&
-      webcamRef.current.video.readyState === 4
-    ) {
-      // Get Video Properties
-      const video = webcamRef.current.video;
-      const videoWidth = webcamRef.current.video.videoWidth;
-      const videoHeight = webcamRef.current.video.videoHeight;
+    try {
+      if (
+        webcamRef.current &&
+        webcamRef.current.video &&
+        webcamRef.current.video.readyState === 4
+      ) {
+        // Get Video Properties
+        const video = webcamRef.current.video;
+        const videoWidth = webcamRef.current.video.videoWidth;
+        const videoHeight = webcamRef.current.video.videoHeight;
 
-      // Set video width
-      webcamRef.current.video.width = videoWidth;
-      webcamRef.current.video.height = videoHeight;
+        // Set video width
+        webcamRef.current.video.width = videoWidth;
+        webcamRef.current.video.height = videoHeight;
 
-      // Make Detections
-      const pose = await net.estimateSinglePose(video);
-      console.log(pose);
+        // Make Detections
+        const pose = await net.estimateSinglePose(video);
+        console.log(pose);
 
-      drawCanvas(pose, video, videoWidth, videoHeight, canvasRef);
+        drawCanvas(pose, video, videoWidth, videoHeight, canvasRef);
+      }
+    } catch (error) {
+      console.error("Error in detect function:", error);
     }
+  };
+
+  const drawCanvas = (pose, video, videoWidth, videoHeight, canvas) => {
+    const ctx = canvas.current.getContext("2d");
+    canvas.current.width = videoWidth;
+    canvas.current.height = videoHeight;
+
+    drawKeypoints(pose["keypoints"], 0.6, ctx);
+    drawSkeleton(pose["keypoints"], 0.7, ctx);
   };
 
   runPosenet();
@@ -71,7 +86,7 @@ function App() {
       />
 
       <canvas
-        ref={webcamRef}
+        ref={canvasRef}
         style={{
           position: "absolute",
           marginLeft: "auto",
@@ -79,7 +94,7 @@ function App() {
           left: 0,
           right: 0,
           textAlign: "center",
-          zindex: 9,
+          zIndex: 9,
           width: 640,
           height: 480,
         }}
