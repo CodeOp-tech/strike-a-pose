@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "nodemon ./bin/www",
-    "migrate":"node model/database.js"
+    "migrate": "node model/database.js"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
