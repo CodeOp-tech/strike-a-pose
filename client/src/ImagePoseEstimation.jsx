@@ -21,6 +21,7 @@ const ImagePoseEstimation = ({ imageSrc }) => {
         canvas.height = inputImage.height;
 
         const pose = await net.estimateSinglePose(inputImage);
+        console.log("This is the image pose" + JSON.stringify(pose, null, 2));
 
         drawCanvas(pose, ctx, canvas.width, canvas.height);
       };
