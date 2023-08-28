@@ -107,10 +107,7 @@ function App() {
 
       <div>
         {/* Render the ImagePoseEstimation component */}
-        <ImagePoseEstimation
-          imageSrc="/Neymarpose2.jpg"
-          canvasRef={canvasRef}
-        />
+        <ImagePoseEstimation imageSrc="/NeymarPose.jpg" canvasRef={canvasRef} />
       </div>
     </div>
   );
