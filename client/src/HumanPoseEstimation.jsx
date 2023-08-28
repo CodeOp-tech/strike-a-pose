@@ -7,22 +7,23 @@
 //7 drawing utilities from tensor flow
 //8 draw function
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import "./App.css";
 import React, { useRef } from "react";
 import * as tf from "@tensorflow/tfjs";
 import * as posenet from "@tensorflow-models/posenet";
 import Webcam from "react-webcam";
 import { drawKeypoints, drawSkeleton } from "./utilities";
-import ImagePoseEstimation from "./ImagePoseEstimation";
 
-function PoseEstimation() {
+function HumanPoseEstimation() {
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
+  const [capturePose, setCapturePose] = useState(null);
 
-  // useEffect(() => {
-  //   runPosenet();
-  // }, []); //maybe delete it
+  const capture = useCallback(() => {
+    const capturePose = webcamRef.current.getScreenshot();
+    setCapturePose(capturePose);
+  }, [webcamRef]);
 
   //Load posenet
   const runPosenet = async () => {
@@ -53,6 +54,7 @@ function PoseEstimation() {
 
         // Make Detections
         const pose = await net.estimateSinglePose(video);
+
         console.log(pose);
 
         drawCanvas(pose, video, videoWidth, videoHeight, canvasRef);
@@ -72,6 +74,7 @@ function PoseEstimation() {
   };
 
   runPosenet();
+
   return (
     <div>
       <Webcam
@@ -102,7 +105,27 @@ function PoseEstimation() {
           height: 480,
         }}
       />
+      <div className="container">
+        {capturePose ? (
+          <img src={capturePose} alt="webcam" />
+        ) : (
+          <Webcam height={600} width={600} ref={webcamRef} />
+        )}
+        <div className="btn-container">
+          <button onClick={capture}>Capture photo</button>
+        </div>
+        <div className="container">
+          {capturePose ? (
+            <img src={capturePose} alt="webcam" />
+          ) : (
+            <Webcam height={600} width={600} ref={webcamRef} />
+          )}
+          <div className="btn-container">
+            <button onClick={capture}>Capture photo</button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
-export default PoseEstimation;
+export default HumanPoseEstimation;
