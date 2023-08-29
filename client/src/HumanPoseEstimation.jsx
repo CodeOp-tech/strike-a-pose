@@ -49,18 +49,21 @@ function HumanPoseEstimation() {
 
   //Load posenet
   const runPosenet = async () => {
-    const net = await posenet.load({
-      inputResolution: { width: 640, height: 480 },
-      scale: 0.5,
-    });
-    setInterval(() => {
-      detect(net);
-    }, 100);
+    if (isCapturing) {
+      const net = await posenet.load({
+        inputResolution: { width: 640, height: 480 },
+        scale: 0.5,
+      });
+      setInterval(() => {
+        detect(net);
+      }, 100);
+    }
   };
 
   const detect = async (net) => {
     try {
       if (
+        !isCapturing &&
         webcamRef.current &&
         webcamRef.current.video &&
         webcamRef.current.video.readyState === 4
