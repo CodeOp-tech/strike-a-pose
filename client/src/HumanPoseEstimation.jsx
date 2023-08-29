@@ -55,7 +55,7 @@ function HumanPoseEstimation() {
         // Make Detections
         const pose = await net.estimateSinglePose(video);
 
-        console.log(pose);
+        console.log(`This is a human pose ${pose}`);
 
         drawCanvas(pose, video, videoWidth, videoHeight, canvasRef);
       }
