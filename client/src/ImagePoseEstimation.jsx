@@ -20,31 +20,33 @@ const ImagePoseEstimation = ({ imageSrc }) => {
         canvas.width = inputImage.width;
         canvas.height = inputImage.height;
 
-        const pose = await net.estimateSinglePose(inputImage);
-        console.log("This is the image pose" + JSON.stringify(pose, null, 2));
+        const imagePose = await net.estimateSinglePose(inputImage);
+        console.log(
+          "This is the image imagePose" + JSON.stringify(imagePose, null, 2)
+        );
 
-        drawCanvas(pose, ctx, canvas.width, canvas.height);
+        drawCanvas(imagePose, ctx, canvas.width, canvas.height);
       };
     }
 
-    function drawCanvas(pose, ctx, canvasWidth, canvasHeight) {
+    function drawCanvas(imagePose, ctx, canvasWidth, canvasHeight) {
       // Clear canvas
       ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
-      // Draw pose keypoints
-      drawKeypoints(pose.keypoints, 0.6, ctx);
+      // Draw imagePose keypoints
+      drawKeypoints(imagePose.keypoints, 0.6, ctx);
 
-      // Draw pose skeleton
-      drawSkeleton(pose.keypoints, 0.7, ctx);
+      // Draw imagePose skeleton
+      drawSkeleton(imagePose.keypoints, 0.7, ctx);
     }
 
-    // Call the pose estimation function
+    // Call the imagePose estimation function
     runPoseEstimation();
   }, [imageSrc]);
 
   return (
     <div>
-      <img src={imageSrc} alt="Pose Image" style={{ maxWidth: "100%" }} />
+      <img src={imageSrc} alt="imagePose Image" style={{ maxWidth: "100%" }} />
       <canvas ref={canvasRef} />
     </div>
   );

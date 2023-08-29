@@ -2,7 +2,7 @@
 //2 Import dependencies DONE
 //3 Set up web cam and canvas DONE
 //4 define referencies to those DONE
-//5 load pose net DOne
+//5 load humanPose net DOne
 //6 detect function Done
 //7 drawing utilities from tensor flow
 //8 draw function
@@ -30,13 +30,13 @@ function HumanPoseEstimation() {
       // Set the captured screenshot as capturePose
       setCapturePose(capturedScreenshot);
 
-      // Load posenet and perform pose detection on the captured screenshot
+      // Load posenet and perform humanPose detection on the captured screenshot
       const net = await posenet.load({
         inputResolution: { width: 640, height: 480 },
         scale: 0.5,
       });
-      const pose = await detect(net, capturedScreenshot);
-      console.log("Last pose:", pose);
+      const humanPose = await detect(net, capturedScreenshot);
+      console.log("Last humanPose:", humanPose);
 
       setIsCapturing(false);
     }, 3000);
@@ -75,25 +75,25 @@ function HumanPoseEstimation() {
         webcamRef.current.video.width = videoWidth;
         webcamRef.current.video.height = videoHeight;
 
-        const pose = await net.estimateSinglePose(video);
+        const humanPose = await net.estimateSinglePose(video);
 
-        console.log(`This is a human pose ${pose}`);
+        console.log(`This is a human humanPose ${humanPose}`);
 
-        drawCanvas(pose, video, videoWidth, videoHeight, canvasRef);
-        return pose;
+        drawCanvas(humanPose, video, videoWidth, videoHeight, canvasRef);
+        return humanPose;
       }
     } catch (error) {
       console.error("Error in detect function:", error);
     }
   };
 
-  const drawCanvas = (pose, video, videoWidth, videoHeight, canvas) => {
+  const drawCanvas = (humanPose, video, videoWidth, videoHeight, canvas) => {
     const ctx = canvas.current.getContext("2d");
     canvas.current.width = videoWidth;
     canvas.current.height = videoHeight;
 
-    drawKeypoints(pose["keypoints"], 0.6, ctx);
-    drawSkeleton(pose["keypoints"], 0.7, ctx);
+    drawKeypoints(humanPose["keypoints"], 0.6, ctx);
+    drawSkeleton(humanPose["keypoints"], 0.7, ctx);
   };
 
   runPosenet();
@@ -133,7 +133,7 @@ function HumanPoseEstimation() {
       <div className="capture-container">
         {capturePose ? (
           <div className="captured-image">
-            <img src={capturePose} alt="captured-pose" />
+            <img src={capturePose} alt="captured-humanPose" />
           </div>
         ) : null}
         <div className="btn-container">
