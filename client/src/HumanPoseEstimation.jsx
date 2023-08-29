@@ -14,6 +14,7 @@ import * as tf from "@tensorflow/tfjs";
 import * as posenet from "@tensorflow-models/posenet";
 import Webcam from "react-webcam";
 import { drawKeypoints, drawSkeleton } from "./utilities";
+import "./HumanPoseEstimation.css";
 
 function HumanPoseEstimation() {
   const webcamRef = useRef(null);
@@ -21,13 +22,23 @@ function HumanPoseEstimation() {
   const [capturePose, setCapturePose] = useState(null);
   const [isCapturing, setIsCapturing] = useState(false); // State for capturing delay
 
-  const capture = useCallback(() => {
+  const capture = useCallback(async () => {
     setIsCapturing(true);
     setTimeout(async () => {
-      const capturedPose = await detect(); // Call the detect function directly
-      setCapturePose(capturedPose);
+      const capturedScreenshot = webcamRef.current.getScreenshot(); // Take the screenshot
+
+      // Set the captured screenshot as capturePose
+      setCapturePose(capturedScreenshot);
+
+      // Load posenet and perform pose detection on the captured screenshot
+      const net = await posenet.load({
+        inputResolution: { width: 640, height: 480 },
+        scale: 0.5,
+      });
+      const pose = await detect(net, capturedScreenshot);
+      console.log("Last pose:", pose);
+
       setIsCapturing(false);
-      console.log("Last pose:", capturedPose); // Log the last pose data object
     }, 3000);
   }, []);
 
@@ -47,13 +58,8 @@ function HumanPoseEstimation() {
     }, 100);
   };
 
-  const detect = async () => {
+  const detect = async (net) => {
     try {
-      const net = await posenet.load({
-        inputResolution: { width: 640, height: 480 },
-        scale: 0.5,
-      });
-
       if (
         webcamRef.current &&
         webcamRef.current.video &&
@@ -77,6 +83,7 @@ function HumanPoseEstimation() {
       console.error("Error in detect function:", error);
     }
   };
+
   const drawCanvas = (pose, video, videoWidth, videoHeight, canvas) => {
     const ctx = canvas.current.getContext("2d");
     canvas.current.width = videoWidth;
@@ -89,41 +96,43 @@ function HumanPoseEstimation() {
   runPosenet();
 
   return (
-    <div>
-      <Webcam
-        ref={webcamRef}
-        style={{
-          position: "absolute",
-          marginLeft: "auto",
-          marginRight: "auto",
-          left: 0,
-          right: 0,
-          textAlign: "center",
-          zindex: 9,
-          width: 640,
-          height: 480,
-        }}
-      />
-      <canvas
-        ref={canvasRef}
-        style={{
-          position: "absolute",
-          marginLeft: "auto",
-          marginRight: "auto",
-          left: 0,
-          right: 0,
-          textAlign: "center",
-          zIndex: 9,
-          width: 640,
-          height: 480,
-        }}
-      />
-      <div className="container">
+    <div className="app-container">
+      <div className="webcam-container">
+        <Webcam
+          ref={webcamRef}
+          style={{
+            position: "absolute",
+            marginLeft: "auto",
+            marginRight: "auto",
+            left: 0,
+            right: 0,
+            textAlign: "center",
+            zindex: 9,
+            width: 640,
+            height: 480,
+          }}
+        />
+        <canvas
+          ref={canvasRef}
+          style={{
+            position: "absolute",
+            marginLeft: "auto",
+            marginRight: "auto",
+            left: 0,
+            right: 0,
+            textAlign: "center",
+            zIndex: 9,
+            width: 640,
+            height: 480,
+          }}
+        />
+      </div>
+      <div className="capture-container">
         {capturePose ? (
-          <img src={capturePose} alt="captured-pose" />
-        ) : (
-          <Webcam height={600} width={600} ref={webcamRef} />
-        )}
+          <div className="captured-image">
+            <img src={capturePose} alt="captured-pose" />
+          </div>
+        ) : null}
         <div className="btn-container">
           <button onClick={capture} disabled={isCapturing}>
             {isCapturing ? "Capturing..." : "Capture with 3s Delay"}
