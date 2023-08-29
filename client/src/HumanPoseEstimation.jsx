@@ -19,11 +19,22 @@ function HumanPoseEstimation() {
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
   const [capturePose, setCapturePose] = useState(null);
+  const [isCapturing, setIsCapturing] = useState(false); // State for capturing delay
 
   const capture = useCallback(() => {
-    const capturePose = webcamRef.current.getScreenshot();
-    setCapturePose(capturePose);
-  }, [webcamRef]);
+    setIsCapturing(true);
+    setTimeout(async () => {
+      const capturedPose = await detect(); // Call the detect function directly
+      setCapturePose(capturedPose);
+      setIsCapturing(false);
+      console.log("Last pose:", capturedPose); // Log the last pose data object
+    }, 3000);
+  }, []);
+
+  // const capture = async () => {
+  //   const capturedPose = await webcamRef.current.getScreenshot();
+  //   setCapturePose(capturedPose);
+  // };
 
   //Load posenet
   const runPosenet = async () => {
@@ -36,34 +47,36 @@ function HumanPoseEstimation() {
     }, 100);
   };
 
-  const detect = async (net) => {
+  const detect = async () => {
     try {
+      const net = await posenet.load({
+        inputResolution: { width: 640, height: 480 },
+        scale: 0.5,
+      });
+
       if (
         webcamRef.current &&
         webcamRef.current.video &&
         webcamRef.current.video.readyState === 4
       ) {
-        // Get Video Properties
         const video = webcamRef.current.video;
         const videoWidth = webcamRef.current.video.videoWidth;
         const videoHeight = webcamRef.current.video.videoHeight;
 
-        // Set video width
         webcamRef.current.video.width = videoWidth;
         webcamRef.current.video.height = videoHeight;
 
-        // Make Detections
         const pose = await net.estimateSinglePose(video);
 
         console.log(`This is a human pose ${pose}`);
 
         drawCanvas(pose, video, videoWidth, videoHeight, canvasRef);
+        return pose;
       }
     } catch (error) {
       console.error("Error in detect function:", error);
     }
   };
-
   const drawCanvas = (pose, video, videoWidth, videoHeight, canvas) => {
     const ctx = canvas.current.getContext("2d");
     canvas.current.width = videoWidth;
@@ -107,22 +120,14 @@ function HumanPoseEstimation() {
       />
       <div className="container">
         {capturePose ? (
-          <img src={capturePose} alt="webcam" />
+          <img src={capturePose} alt="captured-pose" />
         ) : (
           <Webcam height={600} width={600} ref={webcamRef} />
         )}
         <div className="btn-container">
-          <button onClick={capture}>Capture photo</button>
-        </div>
-        <div className="container">
-          {capturePose ? (
-            <img src={capturePose} alt="webcam" />
-          ) : (
-            <Webcam height={600} width={600} ref={webcamRef} />
-          )}
-          <div className="btn-container">
-            <button onClick={capture}>Capture photo</button>
-          </div>
+          <button onClick={capture} disabled={isCapturing}>
+            {isCapturing ? "Capturing..." : "Capture with 3s Delay"}
+          </button>
         </div>
       </div>
     </div>
