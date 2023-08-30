@@ -9,6 +9,7 @@ function App() {
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [currentHumanPose, setCurrentHumanPose] = useState(null);
   const [currentImagePose, setCurrentImagePose] = useState(null);
+  const canvasRef = React.createRef(); // Create the canvas ref
 
   const handleButtonClick = () => {
     setIsTimerActive(true);
@@ -28,7 +29,10 @@ function App() {
   return (
     <div>
       <h1>Strike a Pose</h1>
-      <HumanPoseEstimation onPoseDetected={setCurrentHumanPose} />
+      <HumanPoseEstimation
+        canvasRef={canvasRef}
+        onPoseDetected={setCurrentHumanPose}
+      />
       <div>
         {console.log(currentHumanPose)}
         {/* Render the ImagePoseEstimation component */}
