@@ -54,3 +54,9 @@ const ImagePoseEstimation = ({ imageSrc, onImagePoseDetected }) => {
 };
 
 export default ImagePoseEstimation;
+
+//passing props to stop detecting
+
+// create a state in in app
+//once you get the image captured you update the state in the app
+//form the app you pass the state to thehuman pose that will create a condition based on the value of the state

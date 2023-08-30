@@ -16,7 +16,11 @@ import Webcam from "react-webcam";
 import { drawKeypoints, drawSkeleton } from "./utilities";
 import "./HumanPoseEstimation.css";
 
-function HumanPoseEstimation({ onPoseDetected }) {
+function HumanPoseEstimation({
+  onPoseDetected,
+  setIsImageStored,
+  isImageStored,
+}) {
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
   const [capturePose, setCapturePose] = useState(null);
@@ -37,7 +41,8 @@ function HumanPoseEstimation({ onPoseDetected }) {
         scale: 0.5,
       });
       const humanPose = await detect(net, capturedScreenshot);
-      console.log("Last humanPose:", humanPose);
+      setIsImageStored(true);
+      // console.log("Last humanPose:", humanPose);
       onPoseDetected(humanPose);
       setIsCapturing(false);
     }, 3000);
@@ -50,21 +55,22 @@ function HumanPoseEstimation({ onPoseDetected }) {
 
   //Load posenet
   const runPosenet = async () => {
-    if (isCapturing) {
-      const net = await posenet.load({
-        inputResolution: { width: 640, height: 480 },
-        scale: 0.5,
-      });
-      setInterval(() => {
+    const net = await posenet.load({
+      inputResolution: { width: 640, height: 480 },
+      scale: 0.5,
+    });
+    setInterval(() => {
+      // if is not the image stored  run
+      if (!isImageStored) {
         detect(net);
-      }, 100);
-    }
+      }
+    }, 100);
   };
 
   const detect = async (net) => {
     try {
       if (
-        !isCapturing &&
+        !isImageStored &&
         webcamRef.current &&
         webcamRef.current.video &&
         webcamRef.current.video.readyState === 4
@@ -96,8 +102,9 @@ function HumanPoseEstimation({ onPoseDetected }) {
     drawKeypoints(humanPose["keypoints"], 0.6, ctx);
     drawSkeleton(humanPose["keypoints"], 0.7, ctx);
   };
-
-  runPosenet();
+  useEffect(() => {
+    runPosenet();
+  });
 
   return (
     <div className="app-container">
@@ -107,28 +114,20 @@ function HumanPoseEstimation({ onPoseDetected }) {
           // mirrored={mirrored}
           style={{
             position: "absolute",
-            marginLeft: "auto",
-            marginRight: "auto",
-            left: 0,
-            right: 0,
-            textAlign: "center",
-            zindex: 9,
-            width: 640,
-            height: 480,
+            top: "50%", // Adjust vertical positioning
+            left: "50%", // Adjust horizontal positioning
+            transform: "translate(-50%, -50%)", // Center the element
+            zIndex: 9,
           }}
         />
         <canvas
           ref={canvasRef}
           style={{
             position: "absolute",
-            marginLeft: "auto",
-            marginRight: "auto",
-            left: 0,
-            right: 0,
-            textAlign: "center",
+            top: "50%", // Adjust vertical positioning
+            left: "50%", // Adjust horizontal positioning
+            transform: "translate(-50%, -50%)", // Center the element
             zIndex: 9,
-            width: 640,
-            height: 480,
           }}
         />
       </div>

@@ -9,7 +9,7 @@ function App() {
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [currentHumanPose, setCurrentHumanPose] = useState(null);
   const [currentImagePose, setCurrentImagePose] = useState(null);
-  const canvasRef = React.createRef(); // Create the canvas ref
+  const [isImageStored, setIsImageStored] = useState(false);
 
   const handleButtonClick = () => {
     setIsTimerActive(true);
@@ -30,7 +30,8 @@ function App() {
     <div>
       <h1>Strike a Pose</h1>
       <HumanPoseEstimation
-        canvasRef={canvasRef}
+        setIsImageStored={setIsImageStored}
+        isImageStored={isImageStored}
         onPoseDetected={setCurrentHumanPose}
       />
       <div>
