@@ -21,6 +21,7 @@ function HumanPoseEstimation({ onPoseDetected }) {
   const canvasRef = useRef(null);
   const [capturePose, setCapturePose] = useState(null);
   const [isCapturing, setIsCapturing] = useState(false); // State for capturing delay
+  // const [mirrored, setMirrored] = useState(false); // state for mirroring the webcam
 
   const capture = useCallback(async () => {
     setIsCapturing(true);
@@ -103,6 +104,7 @@ function HumanPoseEstimation({ onPoseDetected }) {
       <div className="webcam-container">
         <Webcam
           ref={webcamRef}
+          // mirrored={mirrored}
           style={{
             position: "absolute",
             marginLeft: "auto",
