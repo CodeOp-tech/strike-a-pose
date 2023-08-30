@@ -16,7 +16,7 @@ import Webcam from "react-webcam";
 import { drawKeypoints, drawSkeleton } from "./utilities";
 import "./HumanPoseEstimation.css";
 
-function HumanPoseEstimation() {
+function HumanPoseEstimation({ onPoseDetected }) {
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
   const [capturePose, setCapturePose] = useState(null);
@@ -37,7 +37,7 @@ function HumanPoseEstimation() {
       });
       const humanPose = await detect(net, capturedScreenshot);
       console.log("Last humanPose:", humanPose);
-
+      onPoseDetected(humanPose);
       setIsCapturing(false);
     }, 3000);
   }, []);

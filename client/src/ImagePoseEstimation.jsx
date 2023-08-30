@@ -3,7 +3,7 @@ import * as tf from "@tensorflow/tfjs";
 import * as posenet from "@tensorflow-models/posenet";
 import { drawKeypoints, drawSkeleton } from "./utilities";
 
-const ImagePoseEstimation = ({ imageSrc }) => {
+const ImagePoseEstimation = ({ imageSrc, onImagePoseDetected }) => {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -21,6 +21,7 @@ const ImagePoseEstimation = ({ imageSrc }) => {
         canvas.height = inputImage.height;
 
         const imagePose = await net.estimateSinglePose(inputImage);
+        onImagePoseDetected(imagePose);
         console.log(
           "This is the image imagePose" + JSON.stringify(imagePose, null, 2)
         );

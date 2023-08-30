@@ -8,12 +8,17 @@ import cosineSimilarity from "compute-cosine-similarity";
 // we need to take the pose of the humanposeestimation comp and the pose of the imageposeestimation component and compare
 //this 2
 
-export default function CalculateEuclidean() {
+export default function CalculateEuclidean({
+  onCurrentHumanPose,
+  onCurrentImagePose,
+}) {
   function poseToVector(pose) {
     let vector = [];
-    pose.forEach((keypoint) => {
+    console.log(pose.keypoints);
+    pose.keypoints.forEach((keypoint) => {
       vector.push(keypoint.position.x, keypoint.position.y);
     });
+    console.log(vector);
     return vector;
   }
   function cosineDistanceMatching(poseVector1, poseVector2) {
@@ -21,13 +26,17 @@ export default function CalculateEuclidean() {
     let distance = 2 * (1 - cosSimilarity);
     return Math.sqrt(distance);
   }
-  const poseVector1 = poseToVector(keypoints);
-  const dataVector = poseToVector(data.keypoints);
-  const distance = cosineDistanceMatching(poseVector1, dataVector);
+  const humanPoseVector = poseToVector(onCurrentHumanPose);
+  const imagePoseVector = poseToVector(onCurrentImagePose);
+  console.log(humanPoseVector);
+  console.log(imagePoseVector);
+  const distance = cosineDistanceMatching(humanPoseVector, imagePoseVector);
   return (
     <div className="App">
       <h1>Hello CodeSandbox</h1>
       <h2>Distance: {distance}</h2>
+      {console.log("humanPose", onCurrentHumanPose)}
+      {console.log("imagePose", onCurrentImagePose)}
     </div>
   );
 }
