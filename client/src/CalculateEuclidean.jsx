@@ -31,10 +31,18 @@ export default function CalculateEuclidean({
   console.log(humanPoseVector);
   console.log(imagePoseVector);
   const distance = cosineDistanceMatching(humanPoseVector, imagePoseVector);
+  let score = ""; // Initialize the score
+
+  if (distance < 0.4) {
+    score = "Good Result";
+  } else if (distance >= 0.4) {
+    score = "Bad Result";
+  }
   return (
     <div className="App">
       <h1>Hello CodeSandbox</h1>
       <h2>Distance: {distance}</h2>
+      <h2>Score: {score}</h2> {/* Display the calculated score */}
       {console.log("humanPose", onCurrentHumanPose)}
       {console.log("imagePose", onCurrentImagePose)}
     </div>

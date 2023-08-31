@@ -4,12 +4,31 @@ import HumanPoseEstimation from "./HumanPoseEstimation";
 import ImagePoseEstimation from "./ImagePoseEstimation";
 import { useState, useEffect } from "react";
 import CalculateEuclidean from "./CalculateEuclidean";
+import Neymarpose2 from "./assets/Neymarpose2.jpg";
+import BabyImage from "./assets/BabyImage.jpg";
+
+const images = [
+  { id: 1, image: Neymarpose2 },
+  { id: 2, image: BabyImage },
+];
 
 function App() {
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [currentHumanPose, setCurrentHumanPose] = useState(null);
   const [currentImagePose, setCurrentImagePose] = useState(null);
   const [isImageStored, setIsImageStored] = useState(false);
+  const [currentImage, setCurrentImage] = useState(null);
+
+  const [allImages, setAllImages] = useState(images);
+
+  useEffect(() => {
+    getNewImage();
+  }, []);
+
+  const getNewImage = () => {
+    const randomIndex = Math.floor(Math.random() * images.length);
+    setCurrentImage(images[randomIndex].image);
+  };
 
   const handleButtonClick = () => {
     setIsTimerActive(true);
@@ -39,7 +58,7 @@ function App() {
         {/* Render the ImagePoseEstimation component */}
         <ImagePoseEstimation
           onImagePoseDetected={setCurrentImagePose}
-          imageSrc="/NeymarPose.jpg"
+          imageSrc={currentImage}
         />
         {console.log(`This is the image pose ${currentImagePose}`)}
       </div>
@@ -59,3 +78,7 @@ function App() {
   );
 }
 export default App;
+
+//create an array of images , a separate compononet
+//in this componet  a state the array of images and another state the current image in the app.jsx
+// in this component you need a function to select a random image from the array
