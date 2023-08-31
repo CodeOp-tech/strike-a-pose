@@ -25,9 +25,12 @@ function HumanPoseEstimation({
   const canvasRef = useRef(null);
   const [capturePose, setCapturePose] = useState(null);
   const [isCapturing, setIsCapturing] = useState(false); // State for capturing delay
+  const [poseEstimationActive, setPoseEstimationActive] = useState(true);
+
   // const [mirrored, setMirrored] = useState(false); // state for mirroring the webcam
 
   const capture = useCallback(async () => {
+    setPoseEstimationActive(false); // Stop pose estimation
     setIsCapturing(true);
     setTimeout(async () => {
       const capturedScreenshot = webcamRef.current.getScreenshot(); // Take the screenshot
@@ -59,15 +62,21 @@ function HumanPoseEstimation({
       inputResolution: { width: 640, height: 480 },
       scale: 0.5,
     });
-    setInterval(() => {
-      // if is not the image stored  run
-      if (!isImageStored) {
+    const intervalId = setInterval(() => {
+      // Check if pose estimation should continue
+      if (!isImageStored && poseEstimationActive) {
         detect(net);
       }
     }, 100);
+
+    // Clear interval when component unmounts or when capture starts
+    return () => clearInterval(intervalId);
   };
 
   const detect = async (net) => {
+    if (!poseEstimationActive) {
+      return;
+    }
     try {
       if (
         !isImageStored &&
@@ -104,7 +113,7 @@ function HumanPoseEstimation({
   };
   useEffect(() => {
     runPosenet();
-  });
+  }, []);
 
   return (
     <div className="app-container">
