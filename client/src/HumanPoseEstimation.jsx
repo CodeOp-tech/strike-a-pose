@@ -14,7 +14,6 @@ import * as tf from "@tensorflow/tfjs";
 import * as posenet from "@tensorflow-models/posenet";
 import Webcam from "react-webcam";
 import { drawKeypoints, drawSkeleton } from "./utilities";
-import "./HumanPoseEstimation.css";
 
 function HumanPoseEstimation({
   onPoseDetected,
@@ -116,7 +115,7 @@ function HumanPoseEstimation({
   }, []);
 
   return (
-    <div className="app-container">
+    <div className="hp-container">
       <div className="webcam-container">
         <Webcam
           ref={webcamRef}

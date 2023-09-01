@@ -32,7 +32,7 @@ export default function CalculateEuclidean({
   console.log(imagePoseVector);
   const distance = cosineDistanceMatching(humanPoseVector, imagePoseVector);
   return (
-    <div className="App">
+    <div className="CalcEuclidean">
       <h1>Hello CodeSandbox</h1>
       <h2>Distance: {distance}</h2>
       {console.log("humanPose", onCurrentHumanPose)}
