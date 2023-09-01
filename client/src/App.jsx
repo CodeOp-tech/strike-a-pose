@@ -7,6 +7,7 @@ import CalculateEuclidean from "./CalculateEuclidean";
 import Neymarpose2 from "./assets/Neymarpose2.jpg";
 import BabyImage from "./assets/BabyImage.jpg";
 
+// the images array, i will delete that when we have ready the back end
 const images = [
   { id: 1, image: Neymarpose2 },
   { id: 2, image: BabyImage },
@@ -18,16 +19,21 @@ function App() {
   const [currentImagePose, setCurrentImagePose] = useState(null);
   const [isImageStored, setIsImageStored] = useState(false);
   const [currentImage, setCurrentImage] = useState(null);
+  const [isCapturing, setIsCapturing] = useState(false);
+  const [capturePose, setCapturePose] = useState(null);
 
-  const [allImages, setAllImages] = useState(images);
+  const [allImages, setAllImages] = useState(images); // create a state that is the images array
 
+  // call the function inside the use effect
   useEffect(() => {
     getNewImage();
   }, []);
 
+  // function to get a new random image from the array
   const getNewImage = () => {
     const randomIndex = Math.floor(Math.random() * images.length);
     setCurrentImage(images[randomIndex].image);
+    // setCurrentImagePose(null);
   };
 
   const handleButtonClick = () => {
@@ -51,10 +57,14 @@ function App() {
       <HumanPoseEstimation
         setIsImageStored={setIsImageStored}
         isImageStored={isImageStored}
+        isCapturing={isCapturing}
+        setIsCapturing={setIsCapturing}
         onPoseDetected={setCurrentHumanPose}
+        capturePose={capturePose}
+        onSetCapturePose={setCapturePose}
       />
       <div>
-        {console.log(currentHumanPose)}
+        {console.log(`This is the human pose`, currentHumanPose)}
         {/* Render the ImagePoseEstimation component */}
         <ImagePoseEstimation
           onImagePoseDetected={setCurrentImagePose}
@@ -69,6 +79,11 @@ function App() {
           <CalculateEuclidean
             onCurrentHumanPose={currentHumanPose}
             onCurrentImagePose={currentImagePose}
+            onSetCurrentHumanPose={setCurrentHumanPose}
+            onGetNewImage={getNewImage}
+            onSetIsCapturing={setIsCapturing}
+            onSetIsImageStored={setIsImageStored}
+            onSetCapturePose={setCapturePose}
           />
         ) : (
           <div />

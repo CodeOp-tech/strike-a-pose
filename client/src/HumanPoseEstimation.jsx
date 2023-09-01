@@ -21,11 +21,13 @@ function HumanPoseEstimation({
   onPoseDetected,
   setIsImageStored,
   isImageStored,
+  isCapturing,
+  setIsCapturing,
+  capturePose,
+  onSetCapturePose,
 }) {
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
-  const [capturePose, setCapturePose] = useState(null);
-  const [isCapturing, setIsCapturing] = useState(false); // State for capturing delay
   const intervalRef = useRef(null);
   const [netState, setNetState] = useState(null);
 
@@ -64,7 +66,7 @@ function HumanPoseEstimation({
     setTimeout(async () => {
       const capturedScreenshot = webcamRef.current.getScreenshot(); // Take the screenshot
       // Set the captured screenshot as capturePose
-      setCapturePose(capturedScreenshot);
+      onSetCapturePose(capturedScreenshot);
       //we didnt need to load detect here one more time
 
       // Load posenet and perform humanPose detection on the captured screenshot

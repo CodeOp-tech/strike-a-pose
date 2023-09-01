@@ -11,6 +11,11 @@ import cosineSimilarity from "compute-cosine-similarity";
 export default function CalculateEuclidean({
   onCurrentHumanPose,
   onCurrentImagePose,
+  onSetCurrentHumanPose,
+  onGetNewImage,
+  onSetIsCapturing,
+  onSetIsImageStored,
+  onSetCapturePose,
 }) {
   function poseToVector(pose) {
     let vector = [];
@@ -20,6 +25,10 @@ export default function CalculateEuclidean({
     });
     console.log(vector);
     return vector;
+  }
+
+  function scrollToTop() {
+    window.scrollTo(0, 0);
   }
   function cosineDistanceMatching(poseVector1, poseVector2) {
     let cosSimilarity = cosineSimilarity(poseVector1, poseVector2);
@@ -38,11 +47,23 @@ export default function CalculateEuclidean({
   } else if (distance >= 0.4) {
     score = "Bad Result";
   }
+
+  const handleClick = () => {
+    onGetNewImage();
+    onSetCurrentHumanPose(null);
+    onSetIsCapturing(false);
+    onSetIsImageStored(null);
+    onSetCapturePose(null);
+    scrollToTop();
+    score = "";
+  };
+
   return (
     <div className="App">
       <h1>Hello CodeSandbox</h1>
       <h2>Distance: {distance}</h2>
       <h2>Score: {score}</h2> {/* Display the calculated score */}
+      <button onClick={handleClick}>Strike another pose!</button>
       {console.log("humanPose", onCurrentHumanPose)}
       {console.log("imagePose", onCurrentImagePose)}
     </div>
