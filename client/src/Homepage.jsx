@@ -21,7 +21,15 @@ export default function Homepage() {
   };
 
   const playClickSound = () => {
-    clickSoundRef.current.play();
+    return new Promise((resolve) => {
+      clickSoundRef.current.play();
+      clickSoundRef.current.onended = resolve;
+    });
+  };
+
+  const handleButtonClick = async () => {
+    await playClickSound();
+    window.location.href = "/gameplay";
   };
 
   return (
@@ -48,9 +56,8 @@ export default function Homepage() {
           <h1 className="neon-headline">Strike A Pose</h1>
         </div>
         <div>
-          <button className="button" onClick={playClickSound}>
-            {" "}
-            <a href="/gameplay">PLAY</a>
+          <button className="button" onClick={handleButtonClick}>
+            PLAY
           </button>
         </div>
       </div>
