@@ -15,6 +15,7 @@ var logger = require("morgan");
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
+var imagesRouter = require("./routes/images");
 
 var app = express();
 
@@ -27,5 +28,6 @@ app.use(cookieParser());
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
+app.use("/images", imagesRouter);
 
 module.exports = app;
