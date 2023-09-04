@@ -1,6 +1,6 @@
 CREATE TABLE images (
     `id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `image_url` VARCHAR(255) NOT NULL,
+    `image_url` VARCHAR(255) NOT NULL
 );
 
 
