@@ -12,3 +12,11 @@ CREATE TABLE users (
     `score` INT NULL
 );
 
+
+ INSERT INTO images (image_url, user_id) VALUES 
+ ('https://storage.cloud.google.com/strike_images/madonna.jpg', 1),
+ ('https://storage.cloud.google.com/strike_images/pose.jpg', 1),
+ ('https://storage.cloud.google.com/strike_images/legendary-hbo-max-1597187375.jpg', 1),
+ ('https://storage.cloud.google.com/strike_images/pose.jpg', 1),
+ ('https://storage.cloud.google.com/strike_images/posesss.jpg', 1);
+
