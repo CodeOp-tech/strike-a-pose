@@ -25,26 +25,29 @@ function HumanPoseEstimation({
   const [capturePose, setCapturePose] = useState(null);
   const [isCapturing, setIsCapturing] = useState(false); // State for capturing delay
   const [poseEstimationActive, setPoseEstimationActive] = useState(true);
+  const [countdown, setCountdown] = useState(null);
+  const DEFAULT_VIDEO_WIDTH = 865;
+  const DEFAULT_VIDEO_HEIGHT = 485;
 
   // const [mirrored, setMirrored] = useState(false); // state for mirroring the webcam
 
   const capture = useCallback(async () => {
-    setPoseEstimationActive(false); // Stop pose estimation
+    setPoseEstimationActive(false);
     setIsCapturing(true);
+    setCountdown(3); // Start the countdown
+    const timer = setInterval(() => {
+      setCountdown((prevCountdown) => prevCountdown - 1);
+    }, 1000);
     setTimeout(async () => {
-      const capturedScreenshot = webcamRef.current.getScreenshot(); // Take the screenshot
-
-      // Set the captured screenshot as capturePose
+      clearInterval(timer); // Stop the countdown timer
+      const capturedScreenshot = webcamRef.current.getScreenshot();
       setCapturePose(capturedScreenshot);
-
-      // Load posenet and perform humanPose detection on the captured screenshot
       const net = await posenet.load({
         inputResolution: { width: 640, height: 480 },
         scale: 0.5,
       });
       const humanPose = await detect(net, capturedScreenshot);
       setIsImageStored(true);
-      // console.log("Last humanPose:", humanPose);
       onPoseDetected(humanPose);
       setIsCapturing(false);
     }, 3000);
@@ -58,9 +61,10 @@ function HumanPoseEstimation({
   //Load posenet
   const runPosenet = async () => {
     const net = await posenet.load({
-      inputResolution: { width: 640, height: 480 },
+      inputResolution: { width: 320, height: 240 }, // Adjusted to be smaller
       scale: 0.5,
     });
+
     const intervalId = setInterval(() => {
       // Check if pose estimation should continue
       if (!isImageStored && poseEstimationActive) {
@@ -119,12 +123,15 @@ function HumanPoseEstimation({
       <div className="webcam-container">
         <Webcam
           ref={webcamRef}
-          // mirrored={mirrored}
+          videoConstraints={{
+            width: DEFAULT_VIDEO_WIDTH,
+            height: DEFAULT_VIDEO_HEIGHT,
+          }}
           style={{
             position: "absolute",
-            top: "50%", // Adjust vertical positioning
-            left: "50%", // Adjust horizontal positioning
-            transform: "translate(-50%, -50%)", // Center the element
+            top: "50%",
+            left: "63%",
+            transform: "translate(-63%, -50%)",
             zIndex: 9,
           }}
         />
@@ -133,8 +140,8 @@ function HumanPoseEstimation({
           style={{
             position: "absolute",
             top: "50%", // Adjust vertical positioning
-            left: "50%", // Adjust horizontal positioning
-            transform: "translate(-50%, -50%)", // Center the element
+            left: "63%", // Adjust horizontal positioning
+            transform: "translate(-63%, -50%)", // Center the element
             zIndex: 9,
           }}
         />
@@ -146,7 +153,16 @@ function HumanPoseEstimation({
           </div>
         ) : null}
         <div className="btn-container">
-          <button onClick={capture} disabled={isCapturing}>
+          <button
+            onClick={capture}
+            disabled={isCapturing}
+            style={{
+              position: "relative",
+              top: "270px",
+              right: "75px",
+              backgroundColor: "gray",
+            }}
+          >
             {isCapturing ? "Capturing..." : "Capture with 3s Delay"}
           </button>
         </div>
