@@ -9,6 +9,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import "./App.css";
+import PropTypes from "prop-types";
 import React, { useRef } from "react";
 import * as tf from "@tensorflow/tfjs";
 import * as posenet from "@tensorflow-models/posenet";
@@ -20,88 +21,66 @@ function HumanPoseEstimation({
   onPoseDetected,
   setIsImageStored,
   isImageStored,
+  isCapturing,
+  setIsCapturing,
+  capturePose,
+  onSetCapturePose,
 }) {
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
-  const [capturePose, setCapturePose] = useState(null);
-  const [isCapturing, setIsCapturing] = useState(false); // State for capturing delay
-  const [poseEstimationActive, setPoseEstimationActive] = useState(true);
+  const intervalRef = useRef(null);
+  const [netState, setNetState] = useState(null);
 
-  // const [mirrored, setMirrored] = useState(false); // state for mirroring the webcam
+  const detect = useCallback(
+    async (net) => {
+      try {
+        if (
+          !isImageStored &&
+          webcamRef.current &&
+          webcamRef.current.video &&
+          webcamRef.current.video.readyState === 4
+        ) {
+          const video = webcamRef.current.video;
+          const videoWidth = webcamRef.current.video.videoWidth;
+          const videoHeight = webcamRef.current.video.videoHeight;
+
+          webcamRef.current.video.width = videoWidth;
+          webcamRef.current.video.height = videoHeight;
+
+          const humanPose = await net.estimateSinglePose(video);
+
+          console.log(`This is a human humanPose ${humanPose}`);
+
+          drawCanvas(humanPose, video, videoWidth, videoHeight, canvasRef);
+          return humanPose;
+        }
+      } catch (error) {
+        console.error("Error in detect function:", error);
+      }
+    },
+    [isImageStored]
+  );
 
   const capture = useCallback(async () => {
-    setPoseEstimationActive(false); // Stop pose estimation
     setIsCapturing(true);
     setTimeout(async () => {
       const capturedScreenshot = webcamRef.current.getScreenshot(); // Take the screenshot
-
       // Set the captured screenshot as capturePose
-      setCapturePose(capturedScreenshot);
+      onSetCapturePose(capturedScreenshot);
+      //we didnt need to load detect here one more time
 
       // Load posenet and perform humanPose detection on the captured screenshot
-      const net = await posenet.load({
-        inputResolution: { width: 640, height: 480 },
-        scale: 0.5,
-      });
-      const humanPose = await detect(net, capturedScreenshot);
+      // const net = await posenet.load({
+      //   inputResolution: { width: 640, height: 480 },
+      //   scale: 0.5,
+      // });
+      const humanPose = await detect(netState, capturedScreenshot);
       setIsImageStored(true);
       // console.log("Last humanPose:", humanPose);
       onPoseDetected(humanPose);
       setIsCapturing(false);
     }, 3000);
-  }, []);
-
-  // const capture = async () => {
-  //   const capturedPose = await webcamRef.current.getScreenshot();
-  //   setCapturePose(capturedPose);
-  // };
-
-  //Load posenet
-  const runPosenet = async () => {
-    const net = await posenet.load({
-      inputResolution: { width: 640, height: 480 },
-      scale: 0.5,
-    });
-    const intervalId = setInterval(() => {
-      // Check if pose estimation should continue
-      if (!isImageStored && poseEstimationActive) {
-        detect(net);
-      }
-    }, 100);
-
-    // Clear interval when component unmounts or when capture starts
-    return () => clearInterval(intervalId);
-  };
-
-  const detect = async (net) => {
-    if (!poseEstimationActive) {
-      return;
-    }
-    try {
-      if (
-        !isImageStored &&
-        webcamRef.current &&
-        webcamRef.current.video &&
-        webcamRef.current.video.readyState === 4
-      ) {
-        const video = webcamRef.current.video;
-        const videoWidth = webcamRef.current.video.videoWidth;
-        const videoHeight = webcamRef.current.video.videoHeight;
-
-        webcamRef.current.video.width = videoWidth;
-        webcamRef.current.video.height = videoHeight;
-
-        const humanPose = await net.estimateSinglePose(video);
-
-        console.log(`This is a human humanPose ${humanPose}`);
-
-        drawCanvas(humanPose, video, videoWidth, videoHeight, canvasRef);
-        return humanPose;
-      }
-    } catch (error) {
-      console.error("Error in detect function:", error);
-    }
-  };
+  }, [detect, onPoseDetected, setIsImageStored, netState]);
 
   const drawCanvas = (humanPose, video, videoWidth, videoHeight, canvas) => {
     const ctx = canvas.current.getContext("2d");
@@ -111,16 +90,41 @@ function HumanPoseEstimation({
     drawKeypoints(humanPose["keypoints"], 0.6, ctx);
     drawSkeleton(humanPose["keypoints"], 0.7, ctx);
   };
+
+  // Load
   useEffect(() => {
-    runPosenet();
+    const runPoseNet = async () => {
+      const net = await posenet.load({
+        inputResolution: { width: 640, height: 480 },
+        scale: 0.5,
+      });
+      setNetState(net);
+    };
+    runPoseNet();
   }, []);
+
+  // Detect
+  useEffect(() => {
+    if (!netState) {
+      return;
+    }
+    intervalRef.current = setInterval(() => {
+      // Check if pose estimation should continue
+      if (!isImageStored) {
+        detect(netState);
+      } else {
+        clearInterval(intervalRef.current);
+      }
+    }, 100);
+
+    return () => clearInterval(intervalRef.current);
+  }, [netState, isImageStored, detect]);
 
   return (
     <div className="app-container">
       <div className="webcam-container">
         <Webcam
           ref={webcamRef}
-          // mirrored={mirrored}
           style={{
             position: "absolute",
             top: "50%", // Adjust vertical positioning

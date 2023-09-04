@@ -26,8 +26,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, "public")));
 
+app.get("/", function (req, res, next) {
+  res.send("hrllo");
+});
+
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
-app.use("/images", imagesRouter);
+app.use("/api/users", usersRouter);
+app.use("/api/images", imagesRouter);
 
 module.exports = app;
