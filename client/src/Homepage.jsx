@@ -10,6 +10,7 @@ export default function Homepage() {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
   const clickSoundRef = useRef(null);
+  const [videoLoaded, setVideoLoaded] = useState(false);
 
   const toggleAudio = () => {
     if (isPlaying) {
@@ -56,6 +57,7 @@ export default function Homepage() {
           <h1 className="neon-headline">Strike A Pose</h1>
         </div>
         <div>
+          {/* change font to righteous */}
           <button className="button" onClick={handleButtonClick}>
             PLAY
           </button>
