@@ -27,7 +27,7 @@ router.get("/:id", async function (req, res, next) {
   }
 });
 
-//Posting an image ()
+// //Posting an image ()
 // router.post("/", async (req, res) => {
 //   try {
 //     // Assuming you receive user_id and image_url in the request body
