@@ -2,7 +2,7 @@
 //2 Import dependencies DONE
 //3 Set up web cam and canvas DONE
 //4 define referencies to those DONE
-//5 load pose net DOne
+//5 load humanPose net DOne
 //6 detect function Done
 //7 drawing utilities from tensor flow
 //8 draw function
@@ -14,16 +14,47 @@ import * as tf from "@tensorflow/tfjs";
 import * as posenet from "@tensorflow-models/posenet";
 import Webcam from "react-webcam";
 import { drawKeypoints, drawSkeleton } from "./utilities";
+import "./HumanPoseEstimation.css";
 
-function HumanPoseEstimation() {
+function HumanPoseEstimation({
+  onPoseDetected,
+  setIsImageStored,
+  isImageStored,
+}) {
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
   const [capturePose, setCapturePose] = useState(null);
+  const [isCapturing, setIsCapturing] = useState(false); // State for capturing delay
+  const [poseEstimationActive, setPoseEstimationActive] = useState(true);
 
-  const capture = useCallback(() => {
-    const capturePose = webcamRef.current.getScreenshot();
-    setCapturePose(capturePose);
-  }, [webcamRef]);
+  // const [mirrored, setMirrored] = useState(false); // state for mirroring the webcam
+
+  const capture = useCallback(async () => {
+    setPoseEstimationActive(false); // Stop pose estimation
+    setIsCapturing(true);
+    setTimeout(async () => {
+      const capturedScreenshot = webcamRef.current.getScreenshot(); // Take the screenshot
+
+      // Set the captured screenshot as capturePose
+      setCapturePose(capturedScreenshot);
+
+      // Load posenet and perform humanPose detection on the captured screenshot
+      const net = await posenet.load({
+        inputResolution: { width: 640, height: 480 },
+        scale: 0.5,
+      });
+      const humanPose = await detect(net, capturedScreenshot);
+      setIsImageStored(true);
+      // console.log("Last humanPose:", humanPose);
+      onPoseDetected(humanPose);
+      setIsCapturing(false);
+    }, 3000);
+  }, []);
+
+  // const capture = async () => {
+  //   const capturedPose = await webcamRef.current.getScreenshot();
+  //   setCapturePose(capturedPose);
+  // };
 
   //Load posenet
   const runPosenet = async () => {
@@ -31,98 +62,94 @@ function HumanPoseEstimation() {
       inputResolution: { width: 640, height: 480 },
       scale: 0.5,
     });
-    setInterval(() => {
-      detect(net);
+    const intervalId = setInterval(() => {
+      // Check if pose estimation should continue
+      if (!isImageStored && poseEstimationActive) {
+        detect(net);
+      }
     }, 100);
+
+    // Clear interval when component unmounts or when capture starts
+    return () => clearInterval(intervalId);
   };
 
   const detect = async (net) => {
+    if (!poseEstimationActive) {
+      return;
+    }
     try {
       if (
+        !isImageStored &&
         webcamRef.current &&
         webcamRef.current.video &&
         webcamRef.current.video.readyState === 4
       ) {
-        // Get Video Properties
         const video = webcamRef.current.video;
         const videoWidth = webcamRef.current.video.videoWidth;
         const videoHeight = webcamRef.current.video.videoHeight;
 
-        // Set video width
         webcamRef.current.video.width = videoWidth;
         webcamRef.current.video.height = videoHeight;
 
-        // Make Detections
-        const pose = await net.estimateSinglePose(video);
+        const humanPose = await net.estimateSinglePose(video);
 
-        console.log(pose);
+        console.log(`This is a human humanPose ${humanPose}`);
 
-        drawCanvas(pose, video, videoWidth, videoHeight, canvasRef);
+        drawCanvas(humanPose, video, videoWidth, videoHeight, canvasRef);
+        return humanPose;
       }
     } catch (error) {
       console.error("Error in detect function:", error);
     }
   };
 
-  const drawCanvas = (pose, video, videoWidth, videoHeight, canvas) => {
+  const drawCanvas = (humanPose, video, videoWidth, videoHeight, canvas) => {
     const ctx = canvas.current.getContext("2d");
     canvas.current.width = videoWidth;
     canvas.current.height = videoHeight;
 
-    drawKeypoints(pose["keypoints"], 0.6, ctx);
-    drawSkeleton(pose["keypoints"], 0.7, ctx);
+    drawKeypoints(humanPose["keypoints"], 0.6, ctx);
+    drawSkeleton(humanPose["keypoints"], 0.7, ctx);
   };
-
-  runPosenet();
+  useEffect(() => {
+    runPosenet();
+  }, []);
 
   return (
-    <div>
-      <Webcam
-        ref={webcamRef}
-        style={{
-          position: "absolute",
-          marginLeft: "auto",
-          marginRight: "auto",
-          left: 0,
-          right: 0,
-          textAlign: "center",
-          zindex: 9,
-          width: 640,
-          height: 480,
-        }}
-      />
-      <canvas
-        ref={canvasRef}
-        style={{
-          position: "absolute",
-          marginLeft: "auto",
-          marginRight: "auto",
-          left: 0,
-          right: 0,
-          textAlign: "center",
-          zIndex: 9,
-          width: 640,
-          height: 480,
-        }}
-      />
-      <div className="container">
+    <div className="app-container">
+      <div className="webcam-container">
+        <Webcam
+          ref={webcamRef}
+          // mirrored={mirrored}
+          style={{
+            position: "absolute",
+            top: "50%", // Adjust vertical positioning
+            left: "50%", // Adjust horizontal positioning
+            transform: "translate(-50%, -50%)", // Center the element
+            zIndex: 9,
+          }}
+        />
+        <canvas
+          ref={canvasRef}
+          style={{
+            position: "absolute",
+            top: "50%", // Adjust vertical positioning
+            left: "50%", // Adjust horizontal positioning
+            transform: "translate(-50%, -50%)", // Center the element
+            zIndex: 9,
+          }}
+        />
+      </div>
+      <div className="capture-container">
         {capturePose ? (
-          <img src={capturePose} alt="webcam" />
-        ) : (
-          <Webcam height={600} width={600} ref={webcamRef} />
-        )}
-        <div className="btn-container">
-          <button onClick={capture}>Capture photo</button>
-        </div>
-        <div className="container">
-          {capturePose ? (
-            <img src={capturePose} alt="webcam" />
-          ) : (
-            <Webcam height={600} width={600} ref={webcamRef} />
-          )}
-          <div className="btn-container">
-            <button onClick={capture}>Capture photo</button>
+          <div className="captured-image">
+            <img src={capturePose} alt="captured-humanPose" />
           </div>
+        ) : null}
+        <div className="btn-container">
+          <button onClick={capture} disabled={isCapturing}>
+            {isCapturing ? "Capturing..." : "Capture with 3s Delay"}
+          </button>
         </div>
       </div>
     </div>
