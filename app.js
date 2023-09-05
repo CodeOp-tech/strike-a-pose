@@ -1,12 +1,3 @@
-// 1. install dependecies
-// 2. import dependecies
-// 3. set up webcam and CanvasCaptureMediaStreamTrack
-// 4. define renferencies for those
-// 5. Load posetNet
-// 6. Detect function
-// 7. Drawing utilities from TensorFlow
-// 8. Draw function
-
 const cors = require("cors"); // add at the top
 var express = require("express");
 var path = require("path");

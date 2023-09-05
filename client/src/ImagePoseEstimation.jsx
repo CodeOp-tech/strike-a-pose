@@ -37,6 +37,7 @@ const ImagePoseEstimation = ({ imageSrc, onImagePoseDetected }) => {
 
         // Draw imagePose keypoints
         drawKeypoints(imagePose.keypoints, 0.6, ctx);
+        console.log(imagePose.keypoints);
 
         // Draw imagePose skeleton
         drawSkeleton(imagePose.keypoints, 0.7, ctx);
