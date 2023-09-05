@@ -28,8 +28,6 @@ function HumanPoseEstimation({
 }) {
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
-  const [capturePose, setCapturePose] = useState(null);
-  const [isCapturing, setIsCapturing] = useState(false); // State for capturing delay
   const [poseEstimationActive, setPoseEstimationActive] = useState(true);
   const [countdown, setCountdown] = useState(null);
   const DEFAULT_VIDEO_WIDTH = 865;
@@ -39,9 +37,9 @@ function HumanPoseEstimation({
 
   const detect = useCallback(
     async (net) => {
-      // if (!poseEstimationActive) {
-      //   return;
-      // }
+      if (!poseEstimationActive) {
+        return;
+      }
       try {
         if (
           !isImageStored &&

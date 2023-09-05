@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import "./App.css";
+import "./styling/App.css";
 import HumanPoseEstimation from "./HumanPoseEstimation";
 import ImagePoseEstimation from "./ImagePoseEstimation";
 import CalculateEuclidean from "./CalculateEuclidean";

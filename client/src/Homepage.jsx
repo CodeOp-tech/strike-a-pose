@@ -1,5 +1,5 @@
 import React from "react";
-import "./App.css";
+import "./styling/App.css";
 import videoPath from "./assets/strikeaposevid.mp4";
 import musicPath from "./assets/HomeMusic.wav";
 import { useRef, useEffect } from "react";

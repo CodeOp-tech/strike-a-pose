@@ -1,5 +1,4 @@
 import React from "react";
-import "./App.css";
 import Homepage from "./Homepage";
 import GamePlay from "./GamePlay";
 // import GameOver from "./GameOver";
@@ -79,14 +78,12 @@ function App() {
     return () => clearTimeout(timer);
   }, [isTimerActive]);
 
-export default function App() {
   return (
-<>
-
+    <>
       <div className="routes">
         <Routes>
-        <Route path="/" element={<Homepage />} />
-        <Route path="/gameplay" element={<GamePlay />} />
+          <Route path="/" element={<Homepage />} />
+          <Route path="/gameplay" element={<GamePlay />} />
           <Route path="/login" element={<Login />} />{" "}
           {/* Render the Login component for the root URL */}
           <Route path="/register" element={<Registration />} />{" "}
