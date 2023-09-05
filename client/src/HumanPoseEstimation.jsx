@@ -30,8 +30,8 @@ function HumanPoseEstimation({
   const canvasRef = useRef(null);
   const [poseEstimationActive, setPoseEstimationActive] = useState(true);
   const [countdown, setCountdown] = useState(null);
-  const DEFAULT_VIDEO_WIDTH = 865;
-  const DEFAULT_VIDEO_HEIGHT = 485;
+  const DEFAULT_VIDEO_WIDTH = 600;
+  const DEFAULT_VIDEO_HEIGHT = 400;
   const intervalRef = useRef(null);
   const [netState, setNetState] = useState(null);
 

@@ -45,6 +45,8 @@ export default function CalculateEuclidean({
   } else if (distance >= 0.4) {
     score = "Bad Result";
   }
+  console.log(score);
+  console.log(distance);
   const handleClick = () => {
     onGetNewImage();
     onSetCurrentHumanPose(null);
