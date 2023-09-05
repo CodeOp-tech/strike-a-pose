@@ -50,6 +50,35 @@ function setDatGuiPropertyCss(propertyText, liCssString, spanCssString = "") {
     }
   }
 }
+// A history object to hold the last N frames of keypoints
+let history = [];
+const N = 5; // Number of frames to consider for the moving average
+
+export function smoothConfidenceScores(keypoints) {
+  history.push(keypoints);
+  if (history.length > N) {
+    history.shift();
+  }
+
+  // Create an array to hold the smoothed keypoints
+  let smoothedKeypoints = [];
+  for (let i = 0; i < keypoints.length; i++) {
+    let totalScore = 0;
+    let validFrames = 0;
+    for (let frame of history) {
+      if (frame[i].score > 0) {
+        totalScore += frame[i].score;
+        validFrames++;
+      }
+    }
+
+    // Calculate the moving average score
+    let averageScore = totalScore / validFrames;
+    smoothedKeypoints.push({ ...keypoints[i], score: averageScore });
+  }
+
+  return smoothedKeypoints;
+}
 
 export function updateTryResNetButtonDatGuiCss() {
   setDatGuiPropertyCss(
@@ -123,8 +152,10 @@ export function drawSkeleton(keypoints, minConfidence, ctx, scale = 1) {
  * Draw pose keypoints onto a canvas
  */
 export function drawKeypoints(keypoints, minConfidence, ctx, scale = 1) {
-  for (let i = 0; i < keypoints.length; i++) {
-    const keypoint = keypoints[i];
+  const smoothedKeypoints = smoothConfidenceScores(keypoints);
+
+  for (let i = 0; i < smoothedKeypoints.length; i++) {
+    const keypoint = smoothedKeypoints[i];
 
     if (keypoint.score < minConfidence) {
       continue;
