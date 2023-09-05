@@ -8,14 +8,14 @@
 //8 draw function
 
 import { useState, useEffect, useCallback } from "react";
-import "./App.css";
+import "./styling/App.css";
 import PropTypes from "prop-types";
 import React, { useRef } from "react";
 import * as tf from "@tensorflow/tfjs";
 import * as posenet from "@tensorflow-models/posenet";
 import Webcam from "react-webcam";
 import { drawKeypoints, drawSkeleton } from "./utilities";
-import "./HumanPoseEstimation.css";
+import "./styling/HumanPoseEstimation.css";
 
 function HumanPoseEstimation({
   onPoseDetected,

@@ -1,9 +1,10 @@
+DROP TABLE IF EXISTS images;
 CREATE TABLE images (
     `id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `image_url` VARCHAR(255) NOT NULL,
+    `image_url` VARCHAR(255) NOT NULL
 );
 
-
+DROP TABLE IF EXISTS users;
 CREATE TABLE users (
     `id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `username` VARCHAR(255) NOT NULL,
@@ -12,10 +13,11 @@ CREATE TABLE users (
 );
 
 
- INSERT INTO images (image_url) VALUES 
- ('https://storage.cloud.google.com/strike_images/madonna.jpg'),
- ('https://storage.cloud.google.com/strike_images/pose.jpg'),
- ('https://storage.cloud.google.com/strike_images/legendary-hbo-max-1597187375.jpg'),
- ('https://storage.cloud.google.com/strike_images/pose.jpg'),
- ('https://storage.cloud.google.com/strike_images/posesss.jpg');
+INSERT INTO images (image_url) VALUES
+ ('/poses/firstPose.png'),
+ ('/poses/secondPose.png'),
+ ('/poses/thirdPose.png'),
+ ('/poses/forthPose.png');
+
+
 
