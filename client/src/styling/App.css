@@ -69,7 +69,7 @@
   object-fit: cover;
   width: auto;
   height: auto;
-  z-index: 0; /* This will remain beneath the content */
+  z-index: 0;
 }
 
 .content {
