@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import HumanPoseEstimation from "./HumanPoseEstimation";
 import ImagePoseEstimation from "./ImagePoseEstimation";
 import "./styling/App.css";
@@ -13,6 +13,10 @@ export default function CalculateEuclidean({
   onSetIsImageStored,
   onSetCapturePose,
 }) {
+  const [result, setResult] = useState([]);
+  const [distance, setDistance] = useState(null);
+  const [score, setScore] = useState(0);
+
   function poseToVector(pose) {
     let vector = [];
     console.log(pose.keypoints);
@@ -34,16 +38,26 @@ export default function CalculateEuclidean({
   const imagePoseVector = poseToVector(onCurrentImagePose);
   console.log(humanPoseVector);
   console.log(imagePoseVector);
-  const distance = cosineDistanceMatching(humanPoseVector, imagePoseVector);
-  let score = ""; // Initialize the score
-  if (distance < 0.4) {
-    score = "Good Result";
-  } else if (distance >= 0.4) {
-    score = "Bad Result";
-  }
-  console.log(score);
-  console.log(distance);
+  useEffect(() => {
+    // Calculate and set the distance
+    const newDistance = cosineDistanceMatching(
+      humanPoseVector,
+      imagePoseVector
+    );
+    setDistance(newDistance);
 
+    // Update the score based on the distance
+    if (newDistance < 0.4) {
+      setScore((prevScore) => prevScore + 2);
+    } else {
+      setScore((prevScore) => prevScore + 1);
+    }
+  }, [humanPoseVector, imagePoseVector]);
+
+  // Update the result history separately
+  useEffect(() => {
+    setResult((prevHistory) => [...prevHistory, { score }]);
+  }, [score]);
   //this is the function that we call in the strike a new pose button
   const handleClick = () => {
     onGetNewImage();
@@ -52,7 +66,6 @@ export default function CalculateEuclidean({
     onSetIsImageStored(null);
     onSetCapturePose(null);
     scrollToTop();
-    score = "";
   };
   return (
     <div className="CalcEuclidean">
@@ -62,6 +75,15 @@ export default function CalculateEuclidean({
       <button onClick={handleClick}>Strike another pose!</button>
       {console.log("humanPose", onCurrentHumanPose)}
       {console.log("imagePose", onCurrentImagePose)}
+      {/* Render the history */}
+      <div>
+        <h2>Total:</h2>
+        <ul>
+          {result.map((entry, index) => (
+            <li key={index}>Score: {entry.score}</li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
