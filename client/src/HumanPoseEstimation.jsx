@@ -1,12 +1,3 @@
-//1 Install dependencies DONE
-//2 Import dependencies DONE
-//3 Set up web cam and canvas DONE
-//4 define referencies to those DONE
-//5 load humanPose net DOne
-//6 detect function Done
-//7 drawing utilities from tensor flow
-//8 draw function
-
 import { useState, useEffect, useCallback } from "react";
 import "./styling/App.css";
 import PropTypes from "prop-types";
@@ -78,13 +69,7 @@ function HumanPoseEstimation({
       const capturedScreenshot = webcamRef.current.getScreenshot(); // Take the screenshot
       // Set the captured screenshot as capturePose
       onSetCapturePose(capturedScreenshot);
-      //we didnt need to load detect here one more time
 
-      // Load posenet and perform humanPose detection on the captured screenshot
-      // const net = await posenet.load({
-      //   inputResolution: { width: 640, height: 480 },
-      //   scale: 0.5,
-      // });
       const humanPose = await detect(netState, capturedScreenshot);
       setIsImageStored(true);
       onPoseDetected(humanPose);
