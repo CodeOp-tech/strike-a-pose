@@ -57,7 +57,7 @@ export default function CalculateEuclidean({
     score = "";
   };
   return (
-    <div className="CalcEuclidean">
+    <div className="calc-euclidean">
       <h1>Hello CodeSandbox</h1>
       <h2>Distance: {distance}</h2>
       <h2>Score: {score}</h2> {/* Display the calculated score */}

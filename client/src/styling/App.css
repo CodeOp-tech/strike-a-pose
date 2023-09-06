@@ -223,3 +223,8 @@ body {
   overflow: hidden;
   right: 5%;
 }
+
+.calc-euclidean {
+  position: relative;
+  z-index: 1000;
+}
