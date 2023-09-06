@@ -92,29 +92,42 @@ function GamePlay() {
         <source src={gameplayMusic} type="audio/mp3" />
         Your browser does not support the audio tag.
       </audio>
-
-      <div className="pose-container">
-        <HumanPoseEstimation
-          setIsImageStored={setIsImageStored}
-          isImageStored={isImageStored}
-          isCapturing={isCapturing}
-          setIsCapturing={setIsCapturing}
-          onPoseDetected={setCurrentHumanPose}
-          capturePose={capturePose}
-          onSetCapturePose={setCapturePose}
-        />
-      </div>
-      <div className="image-container">
-        {console.log(currentHumanPose)}
-        {/* Render the ImagePoseEstimation component */}
-        {currentImage && (
-          <ImagePoseEstimation
-            onImagePoseDetected={setCurrentImagePose}
-            imageSrc={currentImage}
+      <div>
+        {currentHumanPose ? (
+          <CalculateEuclidean
+            onCurrentHumanPose={currentHumanPose}
+            onCurrentImagePose={currentImagePose}
+            onSetCurrentHumanPose={setCurrentHumanPose}
+            onGetNewImage={getNewImage}
+            onSetIsCapturing={setIsCapturing}
+            onSetIsImageStored={setIsImageStored}
+            onSetCapturePose={setCapturePose}
           />
-        )}
-        {console.log(`This is the image pose ${currentImagePose}`)}
-        <div>
+        ) : null}
+        <div />
+
+        <div className="pose-container">
+          <HumanPoseEstimation
+            setIsImageStored={setIsImageStored}
+            isImageStored={isImageStored}
+            isCapturing={isCapturing}
+            setIsCapturing={setIsCapturing}
+            onPoseDetected={setCurrentHumanPose}
+            capturePose={capturePose}
+            onSetCapturePose={setCapturePose}
+          />
+        </div>
+        <div className="image-container">
+          {console.log(currentHumanPose)}
+          {/* Render the ImagePoseEstimation component */}
+          {currentImage && (
+            <ImagePoseEstimation
+              onImagePoseDetected={setCurrentImagePose}
+              imageSrc={currentImage}
+            />
+          )}
+          {console.log(`This is the image pose ${currentImagePose}`)}
+          {/* <div>
           {currentHumanPose ? (
             <CalculateEuclidean
               onCurrentHumanPose={currentHumanPose}
@@ -126,7 +139,7 @@ function GamePlay() {
               onSetCapturePose={setCapturePose}
             />
           ) : null}
-          <div />
+          <div /> */}
         </div>
         {/* <button onClick={handleButtonClick}>Play</button> */}
       </div>
