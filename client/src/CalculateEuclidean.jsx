@@ -1,12 +1,8 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
 import HumanPoseEstimation from "./HumanPoseEstimation";
 import ImagePoseEstimation from "./ImagePoseEstimation";
 import "./styling/App.css";
 import cosineSimilarity from "compute-cosine-similarity";
-
-// we need to take the pose of the humanposeestimation comp and the pose of the imageposeestimation component and compare
-//this 2
 
 export default function CalculateEuclidean({
   onCurrentHumanPose,
@@ -47,6 +43,8 @@ export default function CalculateEuclidean({
   }
   console.log(score);
   console.log(distance);
+
+  //this is the function that we call in the strike a new pose button
   const handleClick = () => {
     onGetNewImage();
     onSetCurrentHumanPose(null);
