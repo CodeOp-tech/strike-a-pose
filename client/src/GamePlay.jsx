@@ -21,7 +21,6 @@ function GamePlay() {
   const [currentImage, setCurrentImage] = useState(null);
   const [isCapturing, setIsCapturing] = useState(false);
   const [capturePose, setCapturePose] = useState(null);
-
   const [allImages, setAllImages] = useState([]); // create a state that is the images array
 
   //fecthing the images from the database

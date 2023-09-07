@@ -3,6 +3,7 @@ import HumanPoseEstimation from "./HumanPoseEstimation";
 import ImagePoseEstimation from "./ImagePoseEstimation";
 import "./styling/App.css";
 import cosineSimilarity from "compute-cosine-similarity";
+import "./styling/CalculateEuclidean.css";
 
 export default function CalculateEuclidean({
   onCurrentHumanPose,
@@ -29,39 +30,47 @@ export default function CalculateEuclidean({
   function scrollToTop() {
     window.scrollTo(0, 0);
   }
-  function cosineDistanceMatching(poseVector1, poseVector2) {
-    let cosSimilarity = cosineSimilarity(poseVector1, poseVector2);
-    let distance = 2 * (1 - cosSimilarity);
-    return Math.sqrt(distance);
-  }
-  const humanPoseVector = poseToVector(onCurrentHumanPose);
-  const imagePoseVector = poseToVector(onCurrentImagePose);
-  console.log(humanPoseVector);
-  console.log(imagePoseVector);
+
+  let times = 0;
+
   useEffect(() => {
+    times++;
+    console.log("use effect being called ", times);
+    console.log("humanpose changed", onCurrentHumanPose);
     // Calculate and set the distance
+    const humanPoseVector = poseToVector(onCurrentHumanPose);
+    const imagePoseVector = poseToVector(onCurrentImagePose);
     const newDistance = cosineDistanceMatching(
       humanPoseVector,
       imagePoseVector
     );
     setDistance(newDistance);
-
-    // Update the score based on the distance
+    let newScore;
     if (newDistance < 0.4) {
-      setScore((prevScore) => prevScore + 2);
+      newScore = 0 + 2;
     } else {
-      setScore((prevScore) => prevScore + 1);
+      newScore = 0 + 1;
     }
-  }, [humanPoseVector, imagePoseVector]);
 
-  // Update the result history separately
-  useEffect(() => {
-    setResult((prevHistory) => [...prevHistory, { score }]);
-  }, [score]);
+    setResult((prevScore) => [...prevScore, { score: newScore }]);
+    setScore(newScore);
+  }, [onCurrentHumanPose]);
+
+  // Function to calculate cosine distance
+  function cosineDistanceMatching(poseVector1, poseVector2) {
+    let cosSimilarity = cosineSimilarity(poseVector1, poseVector2);
+    let distance = 2 * (1 - cosSimilarity);
+    return Math.sqrt(distance);
+  }
+
+  // Function to calculate the total score
+  function calculateTotalScore() {
+    return result.reduce((total, entry) => total + entry.score, 0);
+  }
   //this is the function that we call in the strike a new pose button
   const handleClick = () => {
     onGetNewImage();
-    onSetCurrentHumanPose(null);
+    //onSetCurrentHumanPose(null);
     onSetIsCapturing(false);
     onSetIsImageStored(null);
     onSetCapturePose(null);
@@ -72,6 +81,7 @@ export default function CalculateEuclidean({
       <h1>Hello CodeSandbox</h1>
       <h2>Distance: {distance}</h2>
       <h2>Score: {score}</h2> {/* Display the calculated score */}
+      <h2>Total Score: {calculateTotalScore()}</h2>
       <button onClick={handleClick}>Strike another pose!</button>
       {console.log("humanPose", onCurrentHumanPose)}
       {console.log("imagePose", onCurrentImagePose)}

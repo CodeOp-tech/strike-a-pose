@@ -1,0 +1,12 @@
+/* CalculateEuclidean.css */
+
+.CalcEuclidean {
+  position: absolute;
+  top: 100%; /* Adjust as needed */
+  transform: translateY(-50%);
+  text-align: center;
+  margin-top: 50px; /* Adjust the margin as needed */
+  background-color: #f0f0f0; /* Set a background color */
+  padding: 20px; /* Add padding for spacing */
+  z-index: 9999;
+}
