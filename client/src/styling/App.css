@@ -1,0 +1,246 @@
+#root {
+  height: 100vh;
+  max-width: 100vw;
+  /* margin: 0 auto; */
+  padding: 0;
+  text-align: center;
+  overflow: hidden;
+}
+/* Ensures consistency across browsers */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+/* HomePage */
+.homepage-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+.background-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-height: 100%;
+  min-width: 100%;
+  object-fit: cover;
+  width: auto;
+  height: auto;
+  z-index: 0;
+}
+
+.content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  color: white;
+}
+
+.content-container {
+  position: relative; /* This ensures it's positioned above the video */
+  z-index: 2;
+}
+
+/* neon header*/
+.neon-headline {
+  font-size: 5em;
+  font-family: "Arial", sans-serif;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 6px;
+  /* animation: blink 1.5s infinite; */
+
+  text-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff, 0 0 15px #ff00ff,
+    0 0 20px #ff00ff, 0 0 25px #ff00ff, 0 0 30px #ff00ff, 0 0 35px #ff00ff;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* neon button */
+body {
+  display: flex;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+}
+
+.button {
+  color: black;
+  margin-top: 10%;
+  border: 6px solid #da55b6;
+  border-radius: 15px;
+  padding: 15px 25px;
+  font-size: 30px;
+  font-family: tahoma;
+  letter-spacing: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  filter: drop-shadow(0 0 15px #da55b6) drop-shadow(0 0 50px #da55b6)
+    contrast(2) brightness(2);
+  transition: 0.5s;
+}
+
+.button:hover {
+  color: black;
+  background-color: #da55b6;
+  border-color: white; /* This will set the border color to white on hover */
+  filter: drop-shadow(0 0 20px rgba(219, 62, 177, 0.7)) contrast(2)
+    brightness(2);
+}
+
+.button:focus {
+  outline: none;
+}
+
+.button a {
+  color: inherit;
+  text-decoration: none; /* Removes the underline from the link */
+}
+.button:hover a {
+  color: black; /* This ensures it remains black on hover */
+}
+
+/* Human Pose Estimation */
+
+.hp-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  position: relative;
+}
+
+.webcam-container {
+  position: relative;
+  width: 640px;
+  height: 480px;
+  transform: scaleX(-1);
+}
+
+.capture-container {
+  position: absolute;
+  top: 0;
+  margin-top: 40px;
+}
+
+.captured-image {
+  width: 600px;
+  height: 600px;
+  /* margin-bottom: 10px; */
+  /* Add any other styles you want for the captured image container */
+}
+
+/* gameplay */
+
+.background-video {
+  position: fixed; /* Fixed position */
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  z-index: -100; /* Behind all content */
+  transform: translateX(-50%) translateY(-50%);
+  background-size: cover;
+}
+
+.pose-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  box-sizing: border-box;
+}
+
+/* image  */
+.image-container {
+  width: 600px;
+  position: absolute; /* This will take the container out of the normal flow and position it to the left of its nearest positioned ancestor or the viewport (if no positioned ancestor is found) */
+  left: 0;
+  top: 100px;
+}
+
+.calc-euclidean {
+  position: absolute;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: right;
+  padding-top: 20px;
+}
+
+.calc-euclidean > div {
+  width: 250px;
+  background-color: white;
+  border-radius: 20px;
+  padding: 20px;
+
+  /* move to the right */
+}
+
+.pose-img {
+  top: 0;
+  width: 100%;
+  height: auto;
+  /* move left */
+  transform: translateX(-20%);
+}

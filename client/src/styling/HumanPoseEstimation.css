@@ -1,0 +1,25 @@
+.app-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.webcam-container {
+  width: 640px;
+  height: 480px;
+  transform: scaleX(-1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.capture-container {
+  z-index: 10;
+}
+
+.btn-container {
+  position: absolute;
+  margin-top: 75%;
+}
