@@ -27,33 +27,6 @@
 
 ## About The Project
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-    </li>
-    <li>
-      <a href="#built-with">Built with</a>
-    </li>
-    <li>
-      <a href="#dependencies">Dependecies</a>
-    </li>
-    <li>
-      <a href="#database-prep">Database Prep</a>
-    </li>
-    <li>
-      <a href="#developement">Developement</a>
-    </li>
-  </ol>
-</details>
-
-<!-- ABOUT THE PROJECT -->
-
-## About The Project
-
 <strong>STRIKE A POSE</strong> is an interactive and fun web application where players can challenge themselves to mimic various poses. The game presents users with a series of random poses to imitate, captured from a diverse range of images. Players use their device's camera to capture their own pose, and the application provides feedback on how closely they match the target pose.
 
 `https://github.com/CodeOp-tech/strike-a-pose`
