@@ -56,7 +56,7 @@ export default function CalculateEuclidean({
   };
   return (
     <div className="calc-euclidean">
-      <h1>Hello CodeSandbox</h1>
+      <h1>Hello!</h1>
       <h2>Distance: {distance}</h2>
       <h2>Score: {score}</h2> {/* Display the calculated score */}
       <button onClick={handleClick}>Strike another pose!</button>

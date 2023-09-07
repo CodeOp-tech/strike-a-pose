@@ -1,7 +1,7 @@
 #root {
   height: 100vh;
   max-width: 100vw;
-  margin: 0 auto;
+  /* margin: 0 auto; */
   padding: 0;
   text-align: center;
   overflow: hidden;
@@ -217,11 +217,14 @@ body {
 
 /* image  */
 .image-container {
-  position: relative;
-  width: 33%;
-  height: 33%;
-  overflow: hidden;
+  /* position: relative; */
+  width: 40%;
+  height: 40%;
   right: 5%;
+  position: absolute; /* This will take the container out of the normal flow and position it to the left of its nearest positioned ancestor or the viewport (if no positioned ancestor is found) */
+  left: 0;
+  /* move to down */
+  padding: 5%;
 }
 
 .calc-euclidean {
@@ -229,4 +232,12 @@ body {
   z-index: 9999;
   top: 0;
   left: 0;
+}
+
+.pose-img {
+  top: 0;
+  width: 100%;
+  height: auto;
+  /* move left */
+  transform: translateX(-20%);
 }

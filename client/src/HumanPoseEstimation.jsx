@@ -25,6 +25,7 @@ function HumanPoseEstimation({
   const DEFAULT_VIDEO_HEIGHT = 400;
   const intervalRef = useRef(null);
   const [netState, setNetState] = useState(null);
+  const [isWebcamVisible, setIsWebcamVisible] = useState(true);
 
   const detect = useCallback(
     async (net) => {
@@ -61,21 +62,56 @@ function HumanPoseEstimation({
 
   const capture = useCallback(async () => {
     setIsCapturing(true);
-    setCountdown(3); // Start the countdown
+
+    // Start the countdown
+    setCountdown(3);
+
+    // Initialize a timer to update the countdown every second
     const timer = setInterval(() => {
       setCountdown((prevCountdown) => prevCountdown - 1);
     }, 1000);
-    setTimeout(async () => {
-      const capturedScreenshot = webcamRef.current.getScreenshot(); // Take the screenshot
-      // Set the captured screenshot as capturePose
-      onSetCapturePose(capturedScreenshot);
 
-      const humanPose = await detect(netState, capturedScreenshot);
-      setIsImageStored(true);
-      onPoseDetected(humanPose);
+    // Set a timeout to capture the screenshot after 3 seconds
+    setTimeout(async () => {
+      // Clear the countdown interval
+      clearInterval(timer);
+
+      // Check if the webcamRef is not null before capturing the screenshot
+      if (webcamRef.current) {
+        const capturedScreenshot = webcamRef.current.getScreenshot();
+
+        // Set the captured screenshot as capturePose
+        onSetCapturePose(capturedScreenshot);
+
+        // Get the humanPose and update the relevant states
+        const humanPose = await detect(netState, capturedScreenshot);
+        setIsImageStored(true);
+        onPoseDetected(humanPose);
+      } else {
+        console.error("Webcam ref is null");
+      }
+
       setIsCapturing(false);
     }, 3000);
   }, [detect, onPoseDetected, setIsImageStored, netState]);
+
+  // const capture = async () => {
+  //   setIsCapturing(true);
+
+  //   if (webcamRef.current) {
+  //     try {
+  //       const screenshot = await webcamRef.current.getScreenshot();
+  //       onSetCapturePose(screenshot); // changed setCapturePose to onSetCapturePose
+  //     } catch (error) {
+  //       console.error("Error capturing screenshot: ", error);
+  //     }
+  //   } else {
+  //     console.error("Webcam is not available");
+  //   }
+
+  //   setIsWebcamVisible(false);
+  //   setIsCapturing(false);
+  // };
 
   const drawCanvas = (humanPose, video, videoWidth, videoHeight, canvas) => {
     const ctx = canvas.current.getContext("2d");
@@ -116,32 +152,37 @@ function HumanPoseEstimation({
   }, [netState, isImageStored, detect]);
 
   return (
-    <div className="hp-container">
-      <div className="webcam-container">
-        <Webcam
-          ref={webcamRef}
-          videoConstraints={{
-            width: DEFAULT_VIDEO_WIDTH,
-            height: DEFAULT_VIDEO_HEIGHT,
-          }}
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "63%",
-            transform: "translate(-63%, -50%)",
-            zIndex: 9,
-          }}
-        />
-        <canvas
-          ref={canvasRef}
-          style={{
-            position: "absolute",
-            top: "50%", // Adjust vertical positioning
-            left: "63%", // Adjust horizontal positioning
-            transform: "translate(-63%, -50%)", // Center the element
-            zIndex: 9,
-          }}
-        />
+    <>
+      <div className="hp-container">
+        <div className="webcam-container">
+          {isWebcamVisible && (
+            <Webcam
+              ref={webcamRef}
+              videoConstraints={{
+                width: DEFAULT_VIDEO_WIDTH,
+                height: DEFAULT_VIDEO_HEIGHT,
+              }}
+              style={{
+                zIndex: 9,
+              }}
+            />
+          )}
+          <canvas
+            ref={canvasRef}
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "63%",
+              transform: "translate(-63%, -50%)",
+              zIndex: 9,
+            }}
+          />
+        </div>
+        <div className="btn-container">
+          <button onClick={capture} disabled={isCapturing}>
+            {isCapturing ? "Capturing..." : "Capture with 3s Delay"}
+          </button>
+        </div>
       </div>
       <div className="capture-container">
         {capturePose ? (
@@ -149,22 +190,8 @@ function HumanPoseEstimation({
             <img src={capturePose} alt="captured-humanPose" />
           </div>
         ) : null}
-        <div className="btn-container">
-          <button
-            onClick={capture}
-            disabled={isCapturing}
-            style={{
-              position: "relative",
-              top: "270px",
-              right: "75px",
-              backgroundColor: "gray",
-            }}
-          >
-            {isCapturing ? "Capturing..." : "Capture with 3s Delay"}
-          </button>
-        </div>
       </div>
-    </div>
+    </>
   );
 }
 export default HumanPoseEstimation;

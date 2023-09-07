@@ -50,9 +50,19 @@ const ImagePoseEstimation = ({ imageSrc, onImagePoseDetected }) => {
   }, [imageSrc]);
 
   return (
-    <div>
-      <img src={imageSrc} alt="imagePose Image" style={{ maxWidth: "100%" }} />
-      <canvas ref={canvasRef} />
+    <div className="pose-img">
+      <img
+        src={imageSrc}
+        alt="imagePose Image"
+        style={{
+          width: "100%",
+          objectFit: "contain",
+          position: "relative",
+          left: "0",
+        }}
+      />
+      {/* image points */}
+      <canvas ref={canvasRef} style={{ display: "none" }} />
     </div>
   );
 };

@@ -6,10 +6,13 @@
 }
 
 .webcam-container {
-  position: relative;
+  /* position: fixed; */
   width: 640px;
   height: 480px;
   transform: scaleX(-1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .capture-container {
@@ -25,4 +28,10 @@
   height: 600px;
   margin-bottom: 10px;
   /* Add any other styles you want for the captured image container */
+}
+
+.btn-container {
+  display: flex;
+  justify-content: center; /* To center the button horizontally */
+  margin-top: 70%;
 }

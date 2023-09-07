@@ -82,16 +82,16 @@ function GamePlay() {
   }, []);
 
   return (
-    <div className="main-container">
+    <div>
       <video className="background-video" preload="auto" autoPlay loop muted>
         <source src={gameframevid} type="video/mp4" />
         Your browser does not support the video tag.
       </video>
-
+      {/* 
       <audio ref={audioRef} preload="auto" loop autoPlay>
         <source src={gameplayMusic} type="audio/mp3" />
         Your browser does not support the audio tag.
-      </audio>
+      </audio> */}
       <div>
         {currentHumanPose ? (
           <CalculateEuclidean
