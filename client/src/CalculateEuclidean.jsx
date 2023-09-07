@@ -39,7 +39,7 @@ export default function CalculateEuclidean({
     );
     setDistance(newDistance);
     let newScore;
-    if (newDistance < 0.4) {
+    if (newDistance < 0.5) {
       newScore = 0 + 2;
     } else {
       newScore = 0 + 1;
@@ -72,7 +72,7 @@ export default function CalculateEuclidean({
   return (
     <div className="calc-euclidean">
       <div>
-        <h2>Distance: {distance}</h2>
+        <h2>{Math.round((1 - distance) * 100)}% matching</h2>
         <h2>Score: {score}</h2> {/* Display the calculated score */}
         <h2>Total Score: {calculateTotalScore()}</h2>
         <button onClick={handleClick}>Strike another pose!</button>
