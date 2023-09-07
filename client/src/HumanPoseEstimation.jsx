@@ -177,19 +177,21 @@ function HumanPoseEstimation({
               zIndex: 9,
             }}
           />
+
+          <div className="capture-container">
+            {capturePose ? (
+              <div className="captured-image">
+                <img src={capturePose} alt="captured-humanPose" />
+              </div>
+            ) : null}
+          </div>
         </div>
+
         <div className="btn-container">
           <button onClick={capture} disabled={isCapturing}>
             {isCapturing ? "Capturing..." : "Capture with 3s Delay"}
           </button>
         </div>
-      </div>
-      <div className="capture-container">
-        {capturePose ? (
-          <div className="captured-image">
-            <img src={capturePose} alt="captured-humanPose" />
-          </div>
-        ) : null}
       </div>
     </>
   );

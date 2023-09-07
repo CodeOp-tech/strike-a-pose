@@ -6,32 +6,20 @@
 }
 
 .webcam-container {
-  /* position: fixed; */
   width: 640px;
   height: 480px;
   transform: scaleX(-1);
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 }
 
 .capture-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.captured-image {
-  width: 600px;
-  height: 600px;
-  margin-bottom: 10px;
-  /* Add any other styles you want for the captured image container */
+  z-index: 10;
 }
 
 .btn-container {
-  display: flex;
-  justify-content: center; /* To center the button horizontally */
-  margin-top: 70%;
+  position: absolute;
+  margin-top: 75%;
 }

@@ -78,21 +78,23 @@ export default function CalculateEuclidean({
   };
   return (
     <div className="calc-euclidean">
-      <h1>Hello!</h1>
-      <h2>Distance: {distance}</h2>
-      <h2>Score: {score}</h2> {/* Display the calculated score */}
-      <h2>Total Score: {calculateTotalScore()}</h2>
-      <button onClick={handleClick}>Strike another pose!</button>
-      {console.log("humanPose", onCurrentHumanPose)}
-      {console.log("imagePose", onCurrentImagePose)}
-      {/* Render the history */}
       <div>
-        <h2>Total:</h2>
-        <ul>
-          {result.map((entry, index) => (
-            <li key={index}>Score: {entry.score}</li>
-          ))}
-        </ul>
+        <h1>Hello!</h1>
+        <h2>Distance: {distance}</h2>
+        <h2>Score: {score}</h2> {/* Display the calculated score */}
+        <h2>Total Score: {calculateTotalScore()}</h2>
+        <button onClick={handleClick}>Strike another pose!</button>
+        {console.log("humanPose", onCurrentHumanPose)}
+        {console.log("imagePose", onCurrentImagePose)}
+        {/* Render the history */}
+        <div>
+          <h2>Total:</h2>
+          <ul>
+            {result.map((entry, index) => (
+              <li key={index}>Score: {entry.score}</li>
+            ))}
+          </ul>
+        </div>{" "}
       </div>
     </div>
   );
