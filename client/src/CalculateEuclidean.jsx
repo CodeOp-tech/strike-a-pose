@@ -20,23 +20,16 @@ export default function CalculateEuclidean({
 
   function poseToVector(pose) {
     let vector = [];
-    console.log(pose.keypoints);
     pose.keypoints.forEach((keypoint) => {
       vector.push(keypoint.position.x, keypoint.position.y);
     });
-    console.log(vector);
     return vector;
   }
   function scrollToTop() {
     window.scrollTo(0, 0);
   }
 
-  let times = 0;
-
   useEffect(() => {
-    times++;
-    console.log("use effect being called ", times);
-    console.log("humanpose changed", onCurrentHumanPose);
     // Calculate and set the distance
     const humanPoseVector = poseToVector(onCurrentHumanPose);
     const imagePoseVector = poseToVector(onCurrentImagePose);
@@ -60,7 +53,7 @@ export default function CalculateEuclidean({
   function cosineDistanceMatching(poseVector1, poseVector2) {
     let cosSimilarity = cosineSimilarity(poseVector1, poseVector2);
     let distance = 2 * (1 - cosSimilarity);
-    return Math.sqrt(distance);
+    return parseFloat(Math.sqrt(distance).toFixed(2));
   }
 
   // Function to calculate the total score
@@ -79,21 +72,16 @@ export default function CalculateEuclidean({
   return (
     <div className="calc-euclidean">
       <div>
-        <h1>Hello!</h1>
         <h2>Distance: {distance}</h2>
         <h2>Score: {score}</h2> {/* Display the calculated score */}
         <h2>Total Score: {calculateTotalScore()}</h2>
         <button onClick={handleClick}>Strike another pose!</button>
-        {console.log("humanPose", onCurrentHumanPose)}
-        {console.log("imagePose", onCurrentImagePose)}
         {/* Render the history */}
         <div>
           <h2>Total:</h2>
-          <ul>
-            {result.map((entry, index) => (
-              <li key={index}>Score: {entry.score}</li>
-            ))}
-          </ul>
+          {result.map((entry, index) => (
+            <p key={index}>Score: {entry.score}</p>
+          ))}
         </div>{" "}
       </div>
     </div>
