@@ -48,8 +48,6 @@ function HumanPoseEstimation({
 
           const humanPose = await net.estimateSinglePose(video);
 
-          console.log(`This is a human humanPose ${humanPose}`);
-
           drawCanvas(humanPose, video, videoWidth, videoHeight, canvasRef);
           return humanPose;
         }

@@ -24,9 +24,6 @@ const ImagePoseEstimation = ({ imageSrc, onImagePoseDetected }) => {
 
           const imagePose = await net.estimateSinglePose(inputImage);
           onImagePoseDetected(imagePose);
-          console.log(
-            "This is the image imagePose" + JSON.stringify(imagePose, null, 2)
-          );
 
           drawCanvas(imagePose, ctx, canvas.width, canvas.height);
         };
@@ -55,7 +52,7 @@ const ImagePoseEstimation = ({ imageSrc, onImagePoseDetected }) => {
         src={imageSrc}
         alt="imagePose Image"
         style={{
-          width: "100%",
+          width: "70%",
           objectFit: "contain",
           position: "relative",
           left: "0",
