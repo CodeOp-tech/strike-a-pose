@@ -224,15 +224,17 @@ body {
   left: 0;
   width: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: right;
   padding-top: 20px;
 }
 
 .calc-euclidean > div {
-  width: 500px;
+  width: 250px;
   background-color: white;
   border-radius: 20px;
   padding: 20px;
+
+  /* move to the right */
 }
 
 .pose-img {
