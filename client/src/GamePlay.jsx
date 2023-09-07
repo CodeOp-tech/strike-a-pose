@@ -42,7 +42,6 @@ function GamePlay() {
     const randomIndex = Math.floor(Math.random() * allImages.length);
 
     if (allImages.length) {
-      console.log(allImages[randomIndex].image_url);
       setCurrentImage(allImages[randomIndex].image_url);
     }
   };
@@ -117,7 +116,6 @@ function GamePlay() {
           />
         </div>
         <div className="image-container">
-          {console.log(currentHumanPose)}
           {/* Render the ImagePoseEstimation component */}
           {currentImage && (
             <ImagePoseEstimation
@@ -125,7 +123,6 @@ function GamePlay() {
               imageSrc={currentImage}
             />
           )}
-          {console.log(`This is the image pose ${currentImagePose}`)}
         </div>
         {/* <button onClick={handleButtonClick}>Play</button> */}
       </div>
