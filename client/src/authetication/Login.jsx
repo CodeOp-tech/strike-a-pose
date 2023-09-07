@@ -27,7 +27,6 @@ function Login() {
 
       //store it locally
       localStorage.setItem("token", data.token);
-      console.log(data.message, data.token);
       setData(data.message);
       navigate("/gameplay");
     } catch (error) {
